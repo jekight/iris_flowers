@@ -79,4 +79,65 @@ ggplot(data = dataset, mapping = aes(x = class, y = petal_length)) +
 ggplot(data = dataset, mapping = aes(x = class, y = petal_width)) +
   geom_boxplot()
 
+#Now let's look at some density plots.
+ggplot(data = dataset, mapping = aes(x = sepal_length, color = class)) +
+  geom_density()
+
+ggplot(data = dataset, mapping = aes(x = sepal_width, color = class)) +
+  geom_density()
+
+ggplot(data = dataset, mapping = aes(x = petal_length, color = class)) +
+  geom_density() 
+
+ggplot(data = dataset, mapping = aes(x = petal_width, color = class)) +
+  geom_density()
+
+#This will split our dataset into 10 parts, train in 9 and test on 1 and 
+#release for all combinations of train-test splits. We will also repeat the 
+#process 3 times for each algorithm with different splits of the data into 10 groups, 
+#in an effort to get a more accurate estimate.
+
+# Run algorithms using 10-fold cross validation
+control <- trainControl(method="cv", number=10)
+metric <- "Accuracy"
+
+#Time to build some models.
+
+# a) linear algorithms
+set.seed(7)
+fit.lda <- train(class~., data=dataset, method="lda", metric=metric, trControl=control)
+# b) nonlinear algorithms
+# CART
+set.seed(7)
+fit.cart <- train(class~., data=dataset, method="rpart", metric=metric, trControl=control)
+# kNN
+set.seed(7)
+fit.knn <- train(class~., data=dataset, method="knn", metric=metric, trControl=control)
+# c) advanced algorithms
+# SVM
+set.seed(7)
+fit.svm <- train(class~., data=dataset, method="svmRadial", metric=metric, trControl=control)
+# Random Forest
+set.seed(7)
+fit.rf <- train(class~., data=dataset, method="rf", metric=metric, trControl=control)
+
+# summarize accuracy of models
+results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
+summary(results)
+
+#box plot of the results
+dotplot(results)
+
+#From the results it appears the most accurate model was the lda (linear model).
+
+#Summarize the best model.
+print(fit.lda)
+
+# estimate skill of LDA on the validation dataset
+predictions <- predict(fit.lda, validation)
+confusionMatrix(predictions, validation$class)
+
+
+
+
 
