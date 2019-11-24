@@ -44,7 +44,39 @@ percent_table <- cbind(freq=table(dataset$class),percentage=percentage)
 summary(dataset)
 
 #Let's start visualizing the data.
+ggplot(data = dataset) +
+  geom_point(mapping = aes(x = sepal_length, y = sepal_width, color = class))
+
+ggplot(data = dataset) +
+  geom_point(mapping = aes(x = petal_length, y = petal_width, color = class))
+
+ggplot(data = dataset) +
+  geom_point(mapping = aes(x = petal_length, y = petal_width, color = class))
+
+ggplot(data = dataset) +
+  geom_point(mapping = aes(x = sepal_length, y = petal_length, color = class))
 
 
+ggplot(data = dataset) +
+  geom_point(mapping = aes(x = petal_length, y = petal_width, color = class)) +
+  facet_grid(~class)
+
+ggplot(data = dataset) +
+  geom_point(mapping = aes(x = sepal_length, y = sepal_width, color = class)) +
+  facet_grid(~class)
+
+#Now that we have seen some scatter plots, let's look at boxplots.
+
+ggplot(data = dataset, mapping = aes(x = class, y = sepal_length)) +
+  geom_boxplot()
+
+ggplot(data = dataset, mapping = aes(x = class, y = sepal_width)) +
+  geom_boxplot()
+
+ggplot(data = dataset, mapping = aes(x = class, y = petal_length)) +
+  geom_boxplot()
+
+ggplot(data = dataset, mapping = aes(x = class, y = petal_width)) +
+  geom_boxplot()
 
 
