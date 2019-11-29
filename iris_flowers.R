@@ -1,5 +1,6 @@
 library(tidyverse)
 library(caret)
+library(ggplot2)
 
 #Load in the iris flower data.
 dataset <- read_csv("iris_flowers.csv")
@@ -18,7 +19,7 @@ dataset$class <- as.factor(dataset$class)
 
 #You could use head(dataset) to see any changes
 
-#Now we need to isolatate 75% of the data for testing/training and the rest for validation.
+#Now we need to isolatate 80% of the data for testing/training and the rest for validation.
 
 #First use set.seed so we can reproduce the results with the random number generator.
 set.seed(3142)
@@ -28,10 +29,10 @@ set.seed(3142)
 #and should preserve the overall class distribution of the data.
 test_data <- createDataPartition(dataset$class, times = 1, p = 0.80, list = FALSE)
 
-#Now select 25% of the data for validation.
+#Now select 20% of the data for validation.
 validation <- dataset[-test_data,]
 
-#Now select 75% of the data for testing/training.
+#Now select 80% of the data for testing/training.
 dataset <- dataset[test_data,]
 
 #Confirm we have an equal amount of data from each class.
@@ -104,21 +105,21 @@ metric <- "Accuracy"
 #Time to build some models.
 
 # a) linear algorithms
-set.seed(7)
+set.seed(8)
 fit.lda <- train(class~., data=dataset, method="lda", metric=metric, trControl=control)
 # b) nonlinear algorithms
 # CART
-set.seed(7)
+set.seed(8)
 fit.cart <- train(class~., data=dataset, method="rpart", metric=metric, trControl=control)
 # kNN
-set.seed(7)
+set.seed(8)
 fit.knn <- train(class~., data=dataset, method="knn", metric=metric, trControl=control)
 # c) advanced algorithms
 # SVM
-set.seed(7)
+set.seed(8)
 fit.svm <- train(class~., data=dataset, method="svmRadial", metric=metric, trControl=control)
 # Random Forest
-set.seed(7)
+set.seed(8)
 fit.rf <- train(class~., data=dataset, method="rf", metric=metric, trControl=control)
 
 # summarize accuracy of models
@@ -136,7 +137,6 @@ print(fit.lda)
 # estimate skill of LDA on the validation dataset
 predictions <- predict(fit.lda, validation)
 confusionMatrix(predictions, validation$class)
-
 
 
 
